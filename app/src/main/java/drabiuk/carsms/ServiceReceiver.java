@@ -3,16 +3,10 @@ package drabiuk.carsms;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
-
-/**
- * Created by Admin on 09.05.2017.
- */
 
 public class ServiceReceiver extends BroadcastReceiver {
     @Override

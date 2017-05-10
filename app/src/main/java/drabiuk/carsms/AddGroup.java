@@ -7,14 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.List;
 
-/**
- * Created by Magdalena on 2017-04-25.
- */
-
 public class AddGroup extends AppCompatActivity {
+
         String nazwa;
         String wiadomosc;
         Boolean GroupNameExist=false;
@@ -23,7 +19,6 @@ public class AddGroup extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
-
         Button Button_Add = (Button) findViewById(R.id.btn_addgroup);
 
         final EditText Nazwa_Grupy   = (EditText)findViewById(R.id.addgroup_name);
@@ -37,12 +32,9 @@ public class AddGroup extends AppCompatActivity {
                         GroupNameExist = false;
                         nazwa =  Nazwa_Grupy.getText().toString();
                         wiadomosc = Tresc_Wiadomosci.getText().toString();
-
                         List<ObjectGroup> grupy = MainActivity.getDB().getAllGroups();
                         int liczbagrup = MainActivity.getDB().getGroupCount();
-
                         if(!nazwa.equals("") && !wiadomosc.equals("") &&  !(nazwa.trim().length() == 0) && !(wiadomosc.trim().length() == 0)) {
-
                             for (int i=0;i<liczbagrup;i++) {
                                 String nazwabezspacji = nazwa.replace(" ", "");
                                 String nazwagrupybezspacji = grupy.get(i).getName().replace(" ", "");

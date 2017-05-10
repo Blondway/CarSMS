@@ -2,10 +2,6 @@ package drabiuk.carsms;
 
 import java.io.Serializable;
 
-/**
- * Created by Magdalena on 2017-04-19.
- */
-
 public class ObjectGroup implements Serializable {
     int _id;
     public   String name;

@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-/**
- * Created by Magdalena on 2017-04-19.
- */import java.util.List;
+import java.util.List;
 
 public class GroupListAdapter extends ArrayAdapter<ObjectGroup> {
 

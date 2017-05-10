@@ -3,7 +3,6 @@ package drabiuk.carsms;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -38,7 +37,7 @@ public class EditGroup extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ListView lv = (ListView) findViewById(R.id.lw_uzytkownicygrupy);
         GroupsUserAdapter adapter = new GroupsUserAdapter(getApplicationContext(), contacts);
-        lv.setAdapter(adapter);
+        //lv.setAdapter(adapter);
 
         edytowana_nazwa = (EditText)findViewById(R.id.edit_group_name);
         edytowana_wiadomosc = (EditText)findViewById(R.id.edit_group_message);
@@ -104,12 +103,10 @@ public class EditGroup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
                 for(int i=1;i<=MainActivity.getDB().getContactsCount();i++)
                 {
                     if(MainActivity.getDB().getContact(i).getGroupID()==id)MainActivity.getDB().getContact(i).setGroupID(1);
                 }
-
                 MainActivity.getDB().deleteGroup(id);
                 Intent i = new Intent(getBaseContext(), Groups.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

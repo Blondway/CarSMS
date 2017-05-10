@@ -1,9 +1,5 @@
 package drabiuk.carsms;
 
-/**
- * Created by Magdalena on 2017-04-25.
- */
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
