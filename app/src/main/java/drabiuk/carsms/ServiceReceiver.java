@@ -21,10 +21,10 @@ public class ServiceReceiver extends BroadcastReceiver {
         String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
         if(state.equals(TelephonyManager.EXTRA_STATE_RINGING))
         {
-            incomingNumber = incomingNumber.replace("+48", "");
-            String msg = MainActivity.getDB().GetMessageForPhoneNumber(incomingNumber);
-            Log.i("TAKA WIADOMOSC", msg);
-            if(!msg.equals("NUMBER_NOT_IN_CONTACT_LIST"))SmsManager.getDefault().sendTextMessage(incomingNumber, null, msg, null, null);
+            //incomingNumber = incomingNumber.replace("+48", "");
+            //String msg = MainActivity.getDB().GetMessageForPhoneNumber(incomingNumber);
+            //Log.i("TAKA WIADOMOSC", msg);
+            //if(!msg.equals("NUMBER_NOT_IN_CONTACT_LIST"))SmsManager.getDefault().sendTextMessage(incomingNumber, null, msg, null, null);
             //Log.d("NUMER DZWONI:",incomingNumber);
         }
     }

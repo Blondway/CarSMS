@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Created by Magdalena on 2017-04-25.
+ */
 
 public class AddGroup extends AppCompatActivity {
         String nazwa;
@@ -32,11 +35,10 @@ public class AddGroup extends AppCompatActivity {
             public void onClick(View v)
                     {
                         GroupNameExist = false;
-                        nazwa=Nazwa_Grupy.getText().toString();
-                        wiadomosc=Tresc_Wiadomosci.getText().toString();
+                        nazwa =  Nazwa_Grupy.getText().toString();
+                        wiadomosc = Tresc_Wiadomosci.getText().toString();
 
-                        List<ObjectGroup> grupy =new ArrayList<>();
-                        grupy=MainActivity.getDB().getAllGroups();
+                        List<ObjectGroup> grupy = MainActivity.getDB().getAllGroups();
                         int liczbagrup = MainActivity.getDB().getGroupCount();
 
                         if(!nazwa.equals("") && !wiadomosc.equals("") &&  !(nazwa.trim().length() == 0) && !(wiadomosc.trim().length() == 0)) {

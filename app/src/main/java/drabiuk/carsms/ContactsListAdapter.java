@@ -28,7 +28,6 @@ public class ContactsListAdapter extends ArrayAdapter<Contact> {
     int DBGroupCount = MainActivity.getDB().getGroupCount();
     int[] id_tab=new int [DBGroupCount];
 
-
     public ContactsListAdapter(Context context, List<Contact> resource) {
         super(context,R.layout.element_group, resource);
         this.context = context;
@@ -38,7 +37,6 @@ public class ContactsListAdapter extends ArrayAdapter<Contact> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-
         List<ObjectGroup> grupy = MainActivity.getDB().getAllGroups();
         for(int i=0;i<DBGroupCount;i++)
         {
@@ -66,14 +64,13 @@ public class ContactsListAdapter extends ArrayAdapter<Contact> {
         s.setAdapter(adapter);
 
         int[] GroupIDsList=GetAllGroupsIDs();
-        int SnipperListPosition=0;
+        int SpinnerListPosition=0;
 
         for(int i=0;i<DBGroupCount;i++)
         {
-            if( GroupIDsList[i]==(ContactsItems.get(position).getGroupID()))SnipperListPosition=i;
+            if( GroupIDsList[i]==(ContactsItems.get(position).getGroupID()))SpinnerListPosition=i;
         }
-
-        s.setSelection(SnipperListPosition);
+        s.setSelection(SpinnerListPosition);
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {

@@ -30,7 +30,7 @@ public class EditGroup extends AppCompatActivity {
 
         List<Contact> contacts =new ArrayList<>();
 
-        for(int i=1;i<MainActivity.getDB().getContactsCount();i++)
+        for(int i=1;i<=MainActivity.getDB().getContactsCount();i++)
         {
             if(MainActivity.getDB().getContact(i).getGroupID()==id)contacts.add(MainActivity.getDB().getContact(i));
         }

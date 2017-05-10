@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseHandler db = new DatabaseHandler(this);
 
         Button_Start.setBackgroundColor(0xFFDDDDDD); // 0xAARRGGBB
-
         dbRef=db;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
