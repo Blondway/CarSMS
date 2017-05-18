@@ -37,7 +37,7 @@ public class EditGroup extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ListView lv = (ListView) findViewById(R.id.lw_uzytkownicygrupy);
         GroupsUserAdapter adapter = new GroupsUserAdapter(getApplicationContext(), contacts);
-        //lv.setAdapter(adapter);
+        lv.setAdapter(adapter);
 
         edytowana_nazwa = (EditText)findViewById(R.id.edit_group_name);
         edytowana_wiadomosc = (EditText)findViewById(R.id.edit_group_message);
