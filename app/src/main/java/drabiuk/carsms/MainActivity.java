@@ -17,8 +17,11 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -39,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
         NameOfDB="CarSMS_DB";
 
         ImageButton Button_Settings = (ImageButton) findViewById(R.id.btn_settings);
-        final Button Button_Start = (Button) findViewById(R.id.btn_start);
+        //final Button Button_Start = (Button) findViewById(R.id.btn_start);
         Button Button_DeleteDB = (Button) findViewById(R.id.button_deletedb);
         final DatabaseHandler db = new DatabaseHandler(this);
 
-        Button_Start.setBackgroundColor(0xFFDDDDDD); // 0xAARRGGBB
+        //Button_Start.setBackgroundColor(0xFFDDDDDD); // 0xAARRGGBB
         dbRef=db;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         final NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         final NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.logo_notification)
                 .setContentTitle("CarSMS App")
                 .setContentText("Jak ktoś teraz zadzwoni to dostanie smsa!")
                 .setAutoCancel(true);
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Button_Start.setBackgroundColor(0xFFDDDDDD);
+                //Button_Start.setBackgroundColor(0xFFDDDDDD);
                 mNotificationManager.cancel(0);
                 PackageManager pm  = getApplicationContext().getPackageManager();
                 ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
@@ -121,7 +124,60 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, Groups.class));
             }
         });
-        Button_Start.setOnClickListener(new View.OnClickListener() {
+
+        Switch switchButton;
+        TextView textView;
+        String switchOn = "Switch is ON";
+        String switchOff = "Switch is OFF";
+
+
+
+
+            // For first switch button
+            switchButton = (Switch) findViewById(R.id.switch1);
+            textView = (TextView) findViewById(R.id.textView);
+
+            switchButton.setChecked(false);
+            switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
+                    if (bChecked) {
+                        //textView.setText(switchOn);
+                        mNotificationManager.notify(0, mBuilder.build());
+                        PackageManager pm  = getApplicationContext().getPackageManager();
+                        ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
+                        pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                        Toast.makeText(getApplicationContext(), "BroadcastReceiver activated", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //textView.setText(switchOff);
+                        mNotificationManager.cancel(0);
+                        PackageManager pm  = getApplicationContext().getPackageManager();
+                        ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
+                        pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP);
+                        Toast.makeText(getApplicationContext(), "BroadcastReceiver cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            //if (switchButton.isChecked()) {
+                //textView.setText(switchOn);
+                //mNotificationManager.notify(0, mBuilder.build());
+                //PackageManager pm  = getApplicationContext().getPackageManager();
+                //ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
+                //pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                //Toast.makeText(getApplicationContext(), "BroadcastReceiver activated", Toast.LENGTH_SHORT).show();
+
+            //} else {
+                //textView.setText(switchOff);
+                //mNotificationManager.cancel(0);
+                //PackageManager pm  = getApplicationContext().getPackageManager();
+                //ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
+                //pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP);
+                //Toast.makeText(getApplicationContext(), "BroadcastReceiver cancelled", Toast.LENGTH_SHORT).show();
+            //}
+
+
+        /* Button_Start.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -147,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "BroadcastReceiver activated", Toast.LENGTH_SHORT).show();
                     }
             }
-        });
+        }); */
 
         Button_DeleteDB.setOnClickListener(new View.OnClickListener() {
 

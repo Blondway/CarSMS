@@ -9,9 +9,32 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="545dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dotknij grupę aby edytować."
+            android:textColor="@color/colorGray"
+            android:id="@+id/textView"
+            android:textSize="14sp"
+            android:layout_marginTop="5dp"
+            android:layout_alignLeft="@+id/przycisk_listanumerow"
+            android:layout_alignStart="@+id/przycisk_listanumerow" />
+
+
+        <ListView
+            android:id="@+id/listview1"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_above="@+id/przycisk_listanumerow"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp"
+            android:layout_below="@+id/textView" />
 
         <Button
             android:id="@+id/przycisk_listanumerow"
@@ -25,28 +48,19 @@
             android:text="Lista Numerów" />
 
         <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab_addgroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="16dp"
-                    android:clickable="true"
-                    android:src="@android:drawable/ic_input_add"
-                    app:backgroundTint="@color/colorGray"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="0dp" />
+            android:id="@+id/fab_addgroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="@color/colorAccent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
 
-        <ListView
-            android:id="@+id/listview1"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
-            </RelativeLayout>
+    </RelativeLayout>
 
-        </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

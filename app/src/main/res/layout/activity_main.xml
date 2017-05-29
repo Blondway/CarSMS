@@ -9,25 +9,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch1"
+            android:layout_marginBottom="28dp"
+            android:layout_toLeftOf="@+id/btn_settings"
+            android:layout_toStartOf="@+id/btn_settings"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/logo_big" />
+
+        <!-- <Button
             android:id="@+id/btn_start"
             android:layout_width="180dp"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="START" />
+            android:text="START" /> -->
 
         <ImageButton
 
             android:id="@+id/btn_settings"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_settings"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@mipmap/ic_settings" />
 
         <Button
             android:id="@+id/button_deletedb"
@@ -37,8 +48,20 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/btn_start"
+            android:layout_toStartOf="@+id/switch1"
             android:text="Delete DB" />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/imageView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/imageView"
+            android:layout_marginBottom="145dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
+            android:text="Switch" />
 
     </RelativeLayout>
 

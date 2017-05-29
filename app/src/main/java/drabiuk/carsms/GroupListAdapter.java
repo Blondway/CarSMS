@@ -29,20 +29,32 @@ public class GroupListAdapter extends ArrayAdapter<ObjectGroup> {
 
         final TextView textviewGroupName = (TextView)convertView.findViewById(R.id.groupname);
         final TextView textviewGroupMSG = (TextView)convertView.findViewById(R.id.groupmessage);
-        final ImageButton settings = (ImageButton)convertView.findViewById(R.id.group_settings);
+        //final ImageButton settings = (ImageButton)convertView.findViewById(R.id.group_settings);
 
         textviewGroupName.setText(GroupItems.get(position).getName());
         textviewGroupMSG.setText(GroupItems.get(position).getMsg());
 
-        settings.setOnClickListener(new View.OnClickListener() {
+        //settings.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        Intent i = new Intent(v.getContext(),EditGroup.class);
+        //        i.putExtra("Group_ID", GroupItems.get(position).getID());
+        //        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //        v.getContext().startActivity(i);
+        //    }
+        //});
+        //return convertView;
+
+        convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(),EditGroup.class);
-                i.putExtra("Group_ID", GroupItems.get(position).getID());
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(i);
-            }
-        });
-        return convertView;
+                        Intent i = new Intent(v.getContext(),EditGroup.class);
+                        i.putExtra("Group_ID", GroupItems.get(position).getID());
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        v.getContext().startActivity(i);
+                    }
+                });
+                return convertView;
+
     }
 }

@@ -76,17 +76,17 @@ public class EditGroup extends AppCompatActivity {
                 for (int i=0;i<liczbagrup;i++) {
                     String nazwabezspacji = nazwa.replace(" ", "");
                     String nazwagrupybezspacji = grupy.get(i).getName().replace(" ", "");
-                    if (nazwabezspacji.equals(nazwagrupybezspacji)){
+                    if (nazwabezspacji.equals(nazwagrupybezspacji) && !(MainActivity.getDB().getGroup(id).getName().equals(nazwa))){
                         Toast.makeText(getApplicationContext(),"Taka grupa już istnieje!", Toast.LENGTH_LONG).show();
                         GroupNameExist = true;
                         break;
                     }
                 }
-                if (GroupNameExist == false) {
-                MainActivity.getDB().updateGroup(new ObjectGroup(id,edytowana_nazwa.getText().toString(),edytowana_wiadomosc.getText().toString()));
-                Intent i = new Intent(getBaseContext(), Groups.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                if (GroupNameExist == false || (MainActivity.getDB().getGroup(id).getName().equals(nazwa) )) {
+                    MainActivity.getDB().updateGroup(new ObjectGroup(id,edytowana_nazwa.getText().toString(),edytowana_wiadomosc.getText().toString()));
+                    Intent i = new Intent(getBaseContext(), Groups.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
             }}
             }
         });
