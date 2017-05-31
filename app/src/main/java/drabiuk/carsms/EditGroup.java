@@ -3,6 +3,9 @@ package drabiuk.carsms;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -52,7 +55,7 @@ public class EditGroup extends AppCompatActivity {
             edytowana_nazwa.setFocusable(false);
 
         }
-        Button clickButtonsave = (Button) findViewById(R.id.save_changes);
+        /* Button clickButtonsave = (Button) findViewById(R.id.save_changes);
         clickButtonsave.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -89,9 +92,9 @@ public class EditGroup extends AppCompatActivity {
                     startActivity(i);
             }}
             }
-        });
+        }); */
 
-        Button clickButtondelete = (Button) findViewById(R.id.button_deletegroup);
+        /* Button clickButtondelete = (Button) findViewById(R.id.button_deletegroup);
 
         if(CurrentGroup.getName().equals("Grupa domyślna"))
         {
@@ -112,7 +115,77 @@ public class EditGroup extends AppCompatActivity {
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
-        });
+        }); */
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.bar_edit_group, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.done_button:
+
+                GroupNameExist = false;
+                String nazwa = edytowana_nazwa.getText().toString();
+                String wiadomosc = edytowana_wiadomosc.getText().toString();
+
+                List<ObjectGroup> grupy = new ArrayList<>();
+                grupy = MainActivity.getDB().getAllGroups();
+                int liczbagrup = MainActivity.getDB().getGroupCount();
+
+
+                if (nazwa.equals("") || wiadomosc.equals("") || (nazwa.trim().length() == 0) || (wiadomosc.trim().length() == 0)) {
+                    Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola.", Toast.LENGTH_LONG).show();
+                } else {
+                    for (int i = 0; i < liczbagrup; i++) {
+                        String nazwabezspacji = nazwa.replace(" ", "");
+                        String nazwagrupybezspacji = grupy.get(i).getName().replace(" ", "");
+                        if (nazwabezspacji.equals(nazwagrupybezspacji) && !(MainActivity.getDB().getGroup(id).getName().equals(nazwa))) {
+                            Toast.makeText(getApplicationContext(), "Taka grupa już istnieje!", Toast.LENGTH_LONG).show();
+                            GroupNameExist = true;
+                            break;
+                        }
+                    }
+                    if (GroupNameExist == false || (MainActivity.getDB().getGroup(id).getName().equals(nazwa))) {
+                        MainActivity.getDB().updateGroup(new ObjectGroup(id, edytowana_nazwa.getText().toString(), edytowana_wiadomosc.getText().toString()));
+                        Intent i = new Intent(getBaseContext(), Groups.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                    }
+                }
+
+
+                return true;
+
+            case R.id.delete_button:
+
+                ObjectGroup CurrentGroup = MainActivity.getDB().getGroup(id);
+
+                if (CurrentGroup.getName().equals("Grupa domyślna")){
+                    Toast.makeText(getApplicationContext(),"Nie można usunąć grupy domyślnej", Toast.LENGTH_LONG).show();}
+
+                else {
+                    for(int i=1;i<=MainActivity.getDB().getContactsCount();i++)
+                {
+                    if(MainActivity.getDB().getContact(i).getGroupID()==id)MainActivity.getDB().getContact(i).setGroupID(1);
+                }
+                MainActivity.getDB().deleteGroup(id);}
+
+                Intent i = new Intent(getBaseContext(), Groups.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
