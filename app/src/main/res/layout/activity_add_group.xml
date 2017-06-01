@@ -7,8 +7,8 @@
     tools:context="drabiuk.carsms.AddGroup">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
 
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
@@ -49,7 +49,7 @@
             android:layout_below="@+id/addgroup_name"
             android:ems="10"
             android:hint="Wiadomość"
-            android:inputType="textPersonName"
+            android:inputType="text"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp" />
     </RelativeLayout>

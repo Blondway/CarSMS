@@ -35,7 +35,7 @@
         <activity android:name=".ContactsGroupsList"
             android:label="Lista numerów"
             android:screenOrientation="portrait"/>
-        <receiver android:name=".ServiceReceiver" >
+        <receiver android:name=".ServiceReceiver" android:enabled="false"  >
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>

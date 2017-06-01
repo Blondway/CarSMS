@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -30,17 +31,40 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import static android.Manifest.permission_group.SMS;
+import static android.content.pm.PackageManager.DONT_KILL_APP;
+
 public class MainActivity extends AppCompatActivity {
 
     private static String NameOfPackage;
     private static String NameOfDB;
     private static DatabaseHandler dbRef;
 
-    Boolean StartFlag = false;
+    PackageManager pm;
+    ComponentName componentName;
+    NotificationManager mNotificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission READ_CONTACTS not granted", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission READ_PHONE_STATE not granted", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission SEND_SMS not granted", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+
+        pm = getApplicationContext().getPackageManager();
+        componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
 
         NameOfPackage = getApplicationContext().getPackageName();
         NameOfDB = "CarSMS_DB";
@@ -54,24 +78,16 @@ public class MainActivity extends AppCompatActivity {
         //Button_Start.setBackgroundColor(0xFFDDDDDD); // 0xAARRGGBB
         dbRef = db;
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Permission READ_CONTACTS not granted", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Permission SEND_SMS not granted", Toast.LENGTH_LONG).show();
-            finish();
-        }
 
         File dbtest = new File("/data/data/" + getNameOfPackage() + "/databases/" + NameOfDB);
         if (dbtest.exists()) {
             Log.d("", "Database already exists.");
         } else {
             Log.d("", "Creating a new db.");
-            db.addGroup(new ObjectGroup("Grupa domyślna", "Prosze zadzwonic pozniej."));
-            db.addGroup(new ObjectGroup("Praca", "Nie moge odebrac. Kieruje swoim najszybszym samochodem na swiecie. Oddzwonie pozniej."));
-            db.addGroup(new ObjectGroup("Rodzina", "Nie moge odebrac. Jak cos waznego to wyslij SMSa albo zadzwon pozniej :)"));
-            db.addGroup(new ObjectGroup("Przyjaciele", "Kieruje moim Hyundai'em. Jade zbyt szybko zeby odebrac. Zadzwon pozniej :)"));
+            db.addGroup(new ObjectGroup("Grupa domyślna", "Proszę zadzwonić później."));
+            db.addGroup(new ObjectGroup("Praca", "Nie mogę odebrać. Skontaktuję się później."));
+            db.addGroup(new ObjectGroup("Rodzina", "Jadę samochodem i nie mogę odebrać. Napisz SMS'a lub zadzwoń później :)"));
+            db.addGroup(new ObjectGroup("Przyjaciele", "Nie mogę teraz rozmawiać. Zadzwon pozniej :)"));
 
             String LastPhoneNumber = "", LastName = "";
             ContentResolver cr = getContentResolver();
@@ -108,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        final NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+       mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         final NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.logo_notification)
@@ -140,11 +156,8 @@ public class MainActivity extends AppCompatActivity {
         switchButton = (Switch) findViewById(R.id.switch1);
         textView = (TextView) findViewById(R.id.textSwitch);
 
-        final PackageManager pm = getApplicationContext().getPackageManager();
-        final ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
-
         switchButton.setChecked(false);
-        pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
 
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -153,19 +166,16 @@ public class MainActivity extends AppCompatActivity {
                 if (bChecked) {
                     textView.setText(switchOn);
                     mNotificationManager.notify(0, mBuilder.build());
-                    pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                    pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, DONT_KILL_APP);
                     //Toast.makeText(getApplicationContext(), "Oczekiwanie na połączenie włączone", Toast.LENGTH_SHORT).show();
                 } else {
                     textView.setText(switchOff);
                     mNotificationManager.cancel(0);
-                    pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                    pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
                     //Toast.makeText(getApplicationContext(), "Oczekiwanie na połączenie wyłączone", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
-
     }
 
     public static String getNameOfPackage()
@@ -194,8 +204,6 @@ public class MainActivity extends AppCompatActivity {
      * Identify single menu item by it's id
      * */
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -206,9 +214,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_grupy:
                 // Single menu item is selected do something
                 // Ex: launching new activity/screen or show alert message
-                PackageManager pm  = getApplicationContext().getPackageManager();
-                ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
-                pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP);
+                pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
                 startActivity(new Intent(MainActivity.this, Groups.class));
                 return true;
 
@@ -229,14 +235,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy()
     {
-        super.onDestroy();
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(0);
-        final PackageManager pm = getApplicationContext().getPackageManager();
-        final ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
-        pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
         finish();
-
+        super.onDestroy();
     }
-
 }

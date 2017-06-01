@@ -8,6 +8,8 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class ServiceReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -17,9 +19,10 @@ public class ServiceReceiver extends BroadcastReceiver {
         {
             incomingNumber = incomingNumber.replace("+48", "");
             String msg = MainActivity.getDB().GetMessageForPhoneNumber(incomingNumber);
-            Log.i("TAKA WIADOMOSC", msg);
-            if(!msg.equals("NUMBER_NOT_IN_CONTACT_LIST"))SmsManager.getDefault().sendTextMessage(incomingNumber, null, msg, null, null);
-            Log.d("NUMER DZWONI:",incomingNumber);
+            //Log.i("TAKA WIADOMOSC", msg);
+            ArrayList<String> arrSMS = SmsManager.getDefault().divideMessage(msg);
+            if(!msg.equals("NUMBER_NOT_IN_CONTACT_LIST"))SmsManager.getDefault().sendMultipartTextMessage(incomingNumber, null, arrSMS, null, null);
+            //Log.d("NUMER DZWONI:",incomingNumber);
         }
     }
 }
