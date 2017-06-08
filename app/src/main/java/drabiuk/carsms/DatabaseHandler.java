@@ -65,19 +65,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public String GetMessageForPhoneNumber(String phonenumber)
-    {
-        int GID=1;
+    public String GetMessageForPhoneNumber(String phonenumber) {
+        int GID = 1;
         String msg = "";
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { CONTACTS_KEY_ID, CONTACTS_KEY_NAME, CONTACTS_KEY_PH_NO, CONTACTS_KEY_GROUP_ID }, CONTACTS_KEY_PH_NO + "=?", new String[] { phonenumber }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[]{CONTACTS_KEY_ID, CONTACTS_KEY_NAME, CONTACTS_KEY_PH_NO, CONTACTS_KEY_GROUP_ID}, CONTACTS_KEY_PH_NO + "=?", new String[]{phonenumber}, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             GID = Integer.parseInt(cursor.getString(3));
-        }
-        else return "NUMBER_NOT_IN_CONTACT_LIST";
+        } else return "NUMBER_NOT_IN_CONTACT_LIST";
         cursor.close();
-        cursor = db.query(TABLE_GROUPS, new String[] { GROUPS_KEY_ID, GROUPS_KEY_NAME, GROUPS_KEY_MSG }, GROUPS_KEY_ID + "=?", new String[] { String.valueOf(GID) }, null, null, null, null);
+        cursor = db.query(TABLE_GROUPS, new String[]{GROUPS_KEY_ID, GROUPS_KEY_NAME, GROUPS_KEY_MSG}, GROUPS_KEY_ID + "=?", new String[]{String.valueOf(GID)}, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
 
             msg = cursor.getString(2);
@@ -86,14 +84,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return msg;
     }
 
-    public void deleteDB()
-    {
-        File fdelete = new File("/data/data/"+ drabiuk.carsms.MainActivity.getNameOfPackage()+"/databases/"+DATABASE_NAME);
+    public void deleteDB() {
+        File fdelete = new File("/data/data/" + drabiuk.carsms.MainActivity.getNameOfPackage() + "/databases/" + DATABASE_NAME);
         if (fdelete.exists()) {
             if (fdelete.delete()) {
-                Log.d("","Deleting DB!");
+                Log.d("", "Deleting DB!");
             } else {
-                Log.d("","Not deleting DB!");
+                Log.d("", "Not deleting DB!");
             }
         }
     }
@@ -127,9 +124,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Getting single contact
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { CONTACTS_KEY_ID,
-                        CONTACTS_KEY_NAME, CONTACTS_KEY_PH_NO, CONTACTS_KEY_GROUP_ID }, CONTACTS_KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[]{CONTACTS_KEY_ID,
+                        CONTACTS_KEY_NAME, CONTACTS_KEY_PH_NO, CONTACTS_KEY_GROUP_ID}, CONTACTS_KEY_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
@@ -141,9 +138,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     ObjectGroup getGroup(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_GROUPS, new String[] { GROUPS_KEY_ID,
-                        GROUPS_KEY_NAME, GROUPS_KEY_MSG }, GROUPS_KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_GROUPS, new String[]{GROUPS_KEY_ID,
+                        GROUPS_KEY_NAME, GROUPS_KEY_MSG}, GROUPS_KEY_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
@@ -218,7 +215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // updating row
         return db.update(TABLE_CONTACTS, values, CONTACTS_KEY_ID + " = ?",
-                new String[] { String.valueOf(contact.getID()) });
+                new String[]{String.valueOf(contact.getID())});
     }
 
 
@@ -231,14 +228,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // updating row
         return db.update(TABLE_GROUPS, values, GROUPS_KEY_ID + " = ?",
-                new String[] { String.valueOf(group.getID()) });
+                new String[]{String.valueOf(group.getID())});
     }
 
     // Deleting single contact
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CONTACTS, CONTACTS_KEY_ID + " = ?",
-                new String[] { String.valueOf(contact.getID()) });
+                new String[]{String.valueOf(contact.getID())});
         db.close();
     }
 
@@ -246,13 +243,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteGroup(ObjectGroup group) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_GROUPS, GROUPS_KEY_ID + " = ?",
-                new String[] { String.valueOf(group.getID()) });
+                new String[]{String.valueOf(group.getID())});
         db.close();
     }
 
     public void deleteGroup(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_GROUPS, GROUPS_KEY_ID + " = ?", new String[] { String.valueOf(ID) });
+        db.delete(TABLE_GROUPS, GROUPS_KEY_ID + " = ?", new String[]{String.valueOf(ID)});
         db.close();
     }
 

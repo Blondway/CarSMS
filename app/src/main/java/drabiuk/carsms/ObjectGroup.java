@@ -4,42 +4,49 @@ import java.io.Serializable;
 
 public class ObjectGroup implements Serializable {
     int _id;
-    public   String name;
-    public   String msg;
+    public String name;
+    public String msg;
 
 
     // Empty constructor
-    public ObjectGroup(){
+    public ObjectGroup() {
     }
 
-        public ObjectGroup(int i, String name, String msg) {
+    public ObjectGroup(int i, String name, String msg) {
         this._id = i;
-            this.name=name;
-        this.msg=msg;
+        this.name = name;
+        this.msg = msg;
     }
 
-    public ObjectGroup( String name, String msg) {
-        this.name=name;
-        this.msg=msg;
+    public ObjectGroup(String name, String msg) {
+        this.name = name;
+        this.msg = msg;
     }
 
     // getting ID
-    public int getID(){
+    public int getID() {
         return this._id;
     }
 
     // setting id
-    public void setID(int id){
+    public void setID(int id) {
         this._id = id;
     }
 
 
-    public  String getName() {
-            return name;
-        }
-        public  String getMsg() {
-            return msg;
-        }
-        public void setName(String nazwa) { this.name=nazwa; }
-        public void setMsg(String wiadomosc) { this.msg=wiadomosc; }
+    public String getName() {
+        return name;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setName(String nazwa) {
+        this.name = nazwa;
+    }
+
+    public void setMsg(String wiadomosc) {
+        this.msg = wiadomosc;
+    }
 }

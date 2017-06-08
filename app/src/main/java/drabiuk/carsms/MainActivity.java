@@ -2,36 +2,32 @@ package drabiuk.carsms;
 
 import android.Manifest;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
-import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 
-import static android.Manifest.permission_group.SMS;
 import static android.content.pm.PackageManager.DONT_KILL_APP;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private static String NameOfPackage;
     private static String NameOfDB;
     private static DatabaseHandler dbRef;
+    Toast toast;
 
     PackageManager pm;
     ComponentName componentName;
-    NotificationManager mNotificationManager;
+    Boolean activeFlag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +67,8 @@ public class MainActivity extends AppCompatActivity {
         NameOfPackage = getApplicationContext().getPackageName();
         NameOfDB = "CarSMS_DB";
 
-        /*ImageButton Button_Settings = (ImageButton) findViewById(R.id.btn_settings);
-        //final Button Button_Start = (Button) findViewById(R.id.btn_start);
-        Button Button_DeleteDB = (Button) findViewById(R.id.button_deletedb);
-        */
         final DatabaseHandler db = new DatabaseHandler(this);
-
-        //Button_Start.setBackgroundColor(0xFFDDDDDD); // 0xAARRGGBB
         dbRef = db;
-
 
         File dbtest = new File("/data/data/" + getNameOfPackage() + "/databases/" + NameOfDB);
         if (dbtest.exists()) {
@@ -87,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             db.addGroup(new ObjectGroup("Grupa domyślna", "Proszę zadzwonić później."));
             db.addGroup(new ObjectGroup("Praca", "Nie mogę odebrać. Skontaktuję się później."));
             db.addGroup(new ObjectGroup("Rodzina", "Jadę samochodem i nie mogę odebrać. Napisz SMS'a lub zadzwoń później :)"));
-            db.addGroup(new ObjectGroup("Przyjaciele", "Nie mogę teraz rozmawiać. Zadzwon pozniej :)"));
+            db.addGroup(new ObjectGroup("Przyjaciele", "Nie mogę teraz rozmawiać. Zadzwoń później :)"));
 
             String LastPhoneNumber = "", LastName = "";
             ContentResolver cr = getContentResolver();
@@ -112,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
                             phoneNo = phoneNo.replace("+48", "");
                             phoneNo = phoneNo.replace("-", "");
                             phoneNo = phoneNo.replace(" ", "");
-                            //&& !(LastName.equals(name))
+
                             if (!(LastPhoneNumber.equals(phoneNo)))
                                 db.addContact(new Contact(name, phoneNo, 1));
                             LastPhoneNumber = phoneNo;
-                            //LastName = name;
+
                         }
                         pCur.close();
                     }
@@ -124,27 +115,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-       mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        final NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.logo_notification)
-                .setContentTitle("CarSMS")
-                .setContentText("Oczekiwanie na połączenie włączone.")
-                .setAutoCancel(true);
-
-        /*Button_Settings.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                //Button_Start.setBackgroundColor(0xFFDDDDDD);
-                mNotificationManager.cancel(0);
-                PackageManager pm = getApplicationContext().getPackageManager();
-                ComponentName componentName = new ComponentName(MainActivity.this, ServiceReceiver.class);
-                pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                startActivity(new Intent(MainActivity.this, Groups.class));
-            }
-        }); */
 
         Switch switchButton;
         final TextView textView;
@@ -165,66 +135,71 @@ public class MainActivity extends AppCompatActivity {
 
                 if (bChecked) {
                     textView.setText(switchOn);
-                    mNotificationManager.notify(0, mBuilder.build());
+                    ShowNotification(1);
                     pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, DONT_KILL_APP);
-                    //Toast.makeText(getApplicationContext(), "Oczekiwanie na połączenie włączone", Toast.LENGTH_SHORT).show();
+                    activeFlag = true;
+
                 } else {
                     textView.setText(switchOff);
-                    mNotificationManager.cancel(0);
+                    cancelNotification(getApplicationContext(), 1);
                     pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
-                    //Toast.makeText(getApplicationContext(), "Oczekiwanie na połączenie wyłączone", Toast.LENGTH_SHORT).show();
+                    activeFlag = false;
+
                 }
             }
         });
     }
 
-    public static String getNameOfPackage()
-    {
+    public static String getNameOfPackage() {
         return NameOfPackage;
     }
-    public static String getNameOfDB()
-    {
+
+    public static String getNameOfDB() {
         return NameOfDB;
     }
-    public static DatabaseHandler getDB()
-    {
+
+    public static DatabaseHandler getDB() {
         return dbRef;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu, menu);
         return true;
     }
 
-    /**
-     * Event Handling for Individual menu item selected
-     * Identify single menu item by it's id
-     * */
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
 
             case R.id.menu_grupy:
-                // Single menu item is selected do something
-                // Ex: launching new activity/screen or show alert message
-                pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
-                startActivity(new Intent(MainActivity.this, Groups.class));
+                if (activeFlag == false) {
+                    startActivity(new Intent(MainActivity.this, Groups.class));
+                } else {
+                    toast = Toast.makeText(this, "Aby zmienić ustawienia wyłącz oczekiwanie na połączenie", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+
+                }
                 return true;
 
             case R.id.menu_numery:
-                startActivity(new Intent(MainActivity.this, ContactsGroupsList.class));
+                if (activeFlag == false) {
+                    startActivity(new Intent(MainActivity.this, ContactsGroupsList.class));
+                } else {
+                    toast = Toast.makeText(this, "Aby zmienić ustawienia wyłącz oczekiwanie na połączenie", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
                 return true;
 
             case R.id.menu_delete_db:
-                dbRef.deleteDB();
-                finish();
+                deleteDBDialog();
                 return true;
 
             default:
@@ -233,11 +208,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
-        mNotificationManager.cancel(0);
+    public void onDestroy() {
+
+        cancelNotification(getApplicationContext(), 1);
         pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, DONT_KILL_APP);
         finish();
         super.onDestroy();
     }
+
+    private void cancelNotification(Context ctx, int notifyId) {
+        String ns = ctx.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
+        nMgr.cancel(notifyId);
+    }
+
+    private void ShowNotification(int notifyId) {
+        NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this).setSmallIcon(R.drawable.logo_notification).setContentTitle("CarSMS").setContentText("Oczekiwanie na połączenie włączone.");
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+        mBuilder.setContentIntent(intent);
+        notificationManager.notify(notifyId, mBuilder.build());
+    }
+
+
+    public void deleteDBDialog() {
+
+        new AlertDialog.Builder(this).setTitle("CarSMS").setMessage("Czy chcesz usunąć bazę danych?").setNegativeButton("NIE", null)
+                .setPositiveButton("TAK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        dbRef.deleteDB();
+                        finish();
+                    }
+                }).create().show();
+    }
 }
+
+

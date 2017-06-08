@@ -14,14 +14,14 @@
         tools:layout_editor_absoluteY="8dp">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:text="Dotknij grupę aby edytować."
             android:textColor="@color/colorGray"
-            android:id="@+id/textView"
-            android:textSize="14sp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="14sp" />
 
 
         <ListView
@@ -30,33 +30,22 @@
             android:layout_height="430dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp"
-            android:layout_below="@+id/textView" />
-
-       <!-- <Button
-            android:id="@+id/przycisk_listanumerow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/fab_addgroup"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="14dp"
-            android:layout_marginStart="14dp"
-            android:text="Lista Numerów" /> -->
+            tools:layout_editor_absoluteY="8dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_addgroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:src="@android:drawable/ic_input_add"
-            app:backgroundTint="@color/colorAccent"
-            android:tint="@android:color/white"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="15dp"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/colorAccent" />
 
 
     </RelativeLayout>
